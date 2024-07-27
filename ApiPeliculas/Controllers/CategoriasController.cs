@@ -183,7 +183,7 @@ namespace ApiPeliculas.Controllers
             return NoContent();
         }
 
-        /*Actualizar mediante metodo Delete*/
+        /*Eliminar Delete*/
 
         [HttpDelete("{categoriaId:int}", Name = "EliminarCategoria")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
