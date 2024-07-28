@@ -2,6 +2,7 @@
 using ApiPeliculas.Modelos.Dtos;
 using ApiPeliculas.Repositorio.IRepositorio;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,7 @@ namespace ApiPeliculas.Controllers
 
 
         //Endpoint para obtener todas las peliculas
+        [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -40,6 +42,7 @@ namespace ApiPeliculas.Controllers
         }
 
         //ENDPOINT PARA OBTENER UNA PELICULA INDIVIDUAL
+        [AllowAnonymous]
         [HttpGet("{peliculaId:int}", Name = "GetPelicula")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -61,6 +64,7 @@ namespace ApiPeliculas.Controllers
         }
 
         //Endpoint Crear Pelicula
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ProducesResponseType(201, Type =typeof(PeliculaDto))]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -101,6 +105,8 @@ namespace ApiPeliculas.Controllers
         }
 
         //ENDPOINT PARA ACTUALIZAR UNA PELICULA
+
+        [Authorize(Roles = "Admin")]
         [HttpPatch("{peliculaId:int}", Name = "ActualizarPatchPelicula")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -140,7 +146,8 @@ namespace ApiPeliculas.Controllers
         }
 
         //endpoint para borrar una pelicula
-        
+
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{peliculaId:int}", Name = "EliminarPelicula")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -177,6 +184,7 @@ namespace ApiPeliculas.Controllers
         }
 
         //endpoint para obtener una lista de peliculas por categoria
+        [AllowAnonymous]
         [HttpGet("GetPeliculasEnCategoria/{categoriaId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -199,6 +207,7 @@ namespace ApiPeliculas.Controllers
         }
 
         //endpoint buscar peliculas
+        [AllowAnonymous]
         [HttpGet("Buscar")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
