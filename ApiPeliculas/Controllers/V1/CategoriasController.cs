@@ -1,17 +1,19 @@
 ﻿using ApiPeliculas.Modelos;
 using ApiPeliculas.Modelos.Dtos;
 using ApiPeliculas.Repositorio.IRepositorio;
+using Asp.Versioning;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiPeliculas.Controllers
+namespace ApiPeliculas.Controllers.V1
 {
     //[Route("api/[controller]")]Opcion estatica
     //[Authorize(Roles = "Admin")]
-    [Route("api/categorias")] //Opcion dinamica
+    [Route("api/v{version:apiVersion}/categorias")] //Opcion dinamica
     [ApiController]
+    [ApiVersion("1.0")]
     public class CategoriasController : ControllerBase
     {
         //inyeccion de dependencias
@@ -27,8 +29,10 @@ namespace ApiPeliculas.Controllers
         //GET TODAS LAS CATEGORIAS
         [AllowAnonymous]
         [HttpGet]
+        [ResponseCache(CacheProfileName = "Cache20segundos")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ApiVersion("1.0")]
         public IActionResult GetCategorias()
         {
             var listaCategorias = _ctRepo.GetCategorias();
@@ -82,7 +86,7 @@ namespace ApiPeliculas.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (crearCategoriaDto ==  null)
+            if (crearCategoriaDto == null)
             {
                 return BadRequest(ModelState);
             }
@@ -95,7 +99,7 @@ namespace ApiPeliculas.Controllers
             //mappear la categoria
             var categoria = _mapper.Map<Categoria>(crearCategoriaDto);
 
-            if(!_ctRepo.CrearCategoria(categoria))
+            if (!_ctRepo.CrearCategoria(categoria))
             {
                 ModelState.AddModelError("", $"Algo salio mal guardando el registro {categoria.Nombre}");
                 return StatusCode(404, ModelState);
@@ -200,7 +204,7 @@ namespace ApiPeliculas.Controllers
 
         public IActionResult EliminarCategoria(int categoriaId)
         {
-           
+
             if (!_ctRepo.ExisteCategoria(categoriaId))
             {
                 return NotFound();
@@ -226,5 +230,5 @@ namespace ApiPeliculas.Controllers
         }
     }
 
-   
+
 }

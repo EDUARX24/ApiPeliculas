@@ -3,6 +3,7 @@ using System.Runtime.InteropServices.ComTypes;
 using ApiPeliculas.Modelos;
 using ApiPeliculas.Modelos.Dtos;
 using ApiPeliculas.Repositorio.IRepositorio;
+using Asp.Versioning;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -10,8 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiPeliculas.Controllers
 {
-    [Route("api/usuarios")]
+    [Route("api/v{version:apiVersion}/usuarios")]
     [ApiController]
+    [ApiVersionNeutral]
     public class UsuariosController : ControllerBase
     {
         private readonly IUsuarioRepositorio _usRepo;
@@ -22,7 +24,7 @@ namespace ApiPeliculas.Controllers
         {
             _usRepo = usRepo;
             _mapper = mapper;
-            this._respuestaApi = new();
+            _respuestaApi = new();
         }
 
         //endpoint para obtener todos los usuarios
@@ -86,12 +88,12 @@ namespace ApiPeliculas.Controllers
             }
 
             var usuario = _usRepo.Registro(usuarioRegistroDto);
-            if(usuario == null)
+            if (usuario == null)
             {
                 _respuestaApi.StatusCode = HttpStatusCode.BadRequest;
                 _respuestaApi.IsSuccess = false;
                 _respuestaApi.ErrorMessages.Add("Error al registrar al usuario");
-                return  BadRequest(_respuestaApi);
+                return BadRequest(_respuestaApi);
             }
 
             _respuestaApi.StatusCode = HttpStatusCode.OK;
@@ -124,7 +126,7 @@ namespace ApiPeliculas.Controllers
             //nos devuelve el token
             _respuestaApi.Result = respuestaLogin;
             return Ok(_respuestaApi);
-         
+
         }
 
 
